@@ -1,0 +1,53 @@
+<head>
+</head>
+
+<body>
+    <script>
+        let computerScore = 0;
+        let playerScore = 0;
+
+        function computerPlay (array) {
+            return array[Math.floor(Math.random()*3)];
+        }
+
+        function playRound () {
+            const playerSelection = prompt('Rock, Paper or Sissors? Make your choice!');
+            const playerSelectionLow = playerSelection.toLowerCase();
+            const computerSelection = computerPlay(['rock', 'paper', 'sissors']);
+            
+            if (playerSelectionLow === 'rock' && computerSelection === 'paper' || 
+                    playerSelectionLow === 'paper' && computerSelection === 'sissors' ||
+                        playerSelectionLow === 'sissors' && computerSelection === 'rock') {
+                            computerScore++;
+                            return `You Lose! ${computerSelection} beats ${playerSelection}`;
+            } else if (playerSelectionLow === 'rock' && computerSelection === 'sissors' ||
+                        playerSelectionLow === 'paper' && computerSelection === 'rock' ||
+                            playerSelectionLow === 'sissors' && computerSelection === 'paper') {
+                                playerScore++;
+                                return `You Win! ${playerSelection} beats ${computerSelection}`;
+            } else {
+                return 'Tie!';
+            }
+        }
+
+        function game() {
+            for (let gameNum = 1; gameNum <=5; gameNum++) {
+            console.log(playRound());
+            console.log(`SCORE: Player ${playerScore} : ${computerScore} Computer`);
+            }
+            return endGame();
+        }       
+
+        function endGame() {
+            if (playerScore > computerScore) {
+                console.log('Congratulations! You win the game!');
+            } else if (playerScore < computerScore) {
+                console.log('You lose the game :( Try again!');
+            } else {
+                console.log('It\'s a tie! Try again!');
+            }
+            playerScore = 0;
+            computerScore = 0;     
+        }
+    </script>
+</body>
