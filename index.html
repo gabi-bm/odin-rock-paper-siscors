@@ -1,8 +1,66 @@
 <head>
+    <style> 
+        .start-game-btn {
+            margin: 10px 0;
+            padding: 5px 5px;
+            background-color: rgba(8, 30, 104, 0.767);
+            color: rgb(236, 233, 233);
+            border: 1px solid rgb(236, 233, 233);`
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .weapon{
+            margin: 10px 0;
+            padding: 5px 5px;
+            background-color: rgba(9, 54, 202, 0.767);
+            color: rgb(236, 233, 233);
+            border: 1px solid rgb(236, 233, 233);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all .07s ease;
+        }
+
+        :disabled {
+            background-color: rgba(170, 165, 165, 0.555);
+            color:rgba(240, 240, 240, 0.555);
+        }
+
+        .click {
+            transform: scale(0.9);
+            box-shadow: 0 0 1rem rgb(236, 233, 233);;
+        }
+    </style>
 </head>
 
 <body>
+    <h1>Rock, Paper and Sissors</h1>
+
+    <div class='container'>
+        <div>
+            <button class='start-game-btn'>Start Game</button>
+        </div>
+        <div class='game'>
+            <button class='weapon' id='rock' disabled>Rock</button>
+            <button class='weapon' id='paper' disabled>Paper</button>
+            <button class='weapon' id='sissors' disabled>Sissors</button>
+            
+            <div class='score'>
+                <p id='round-score'></p>
+                <p id='accum-score'></p>
+                <p id='final-score'></p>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const startBtn = document.querySelector('.start-game-btn');
+        const weapons = document.querySelectorAll('.weapon');
+        const score = document.querySelector('.score');
+        const roundScore = document.querySelector('#round-score');
+        const accumScore = document.querySelector('#accum-score');
+        const finalScore = document.querySelector('#final-score'); 
+        
         let computerScore = 0;
         let playerScore = 0;
 
@@ -10,44 +68,58 @@
             return array[Math.floor(Math.random()*3)];
         }
 
-        function playRound () {
-            const playerSelection = prompt('Rock, Paper or Sissors? Make your choice!');
+        function playRound (e) {
+            const playerSelection = e.target.id;
             const playerSelectionLow = playerSelection.toLowerCase();
             const computerSelection = computerPlay(['rock', 'paper', 'sissors']);
-            
             if (playerSelectionLow === 'rock' && computerSelection === 'paper' || 
                     playerSelectionLow === 'paper' && computerSelection === 'sissors' ||
                         playerSelectionLow === 'sissors' && computerSelection === 'rock') {
                             computerScore++;
-                            return `You Lose! ${computerSelection} beats ${playerSelection}`;
+                            roundScore.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
             } else if (playerSelectionLow === 'rock' && computerSelection === 'sissors' ||
                         playerSelectionLow === 'paper' && computerSelection === 'rock' ||
                             playerSelectionLow === 'sissors' && computerSelection === 'paper') {
                                 playerScore++;
-                                return `You Win! ${playerSelection} beats ${computerSelection}`;
+                                roundScore.textContent = `You Win! ${playerSelection} beats ${computerSelection}`;
             } else {
-                return 'Tie!';
+                roundScore.textContent = 'Tie!';
             }
+            accumScore.textContent = `SCORE: Player ${playerScore} : ${computerScore} Computer`;
         }
 
-        function game() {
-            for (let gameNum = 1; gameNum <=5; gameNum++) {
-            console.log(playRound());
-            console.log(`SCORE: Player ${playerScore} : ${computerScore} Computer`);
-            }
-            return endGame();
-        }       
+        function startGame() { 
+            startBtn.disabled = true;
+            weapons.forEach((weapon) => weapon.disabled = false);
+            roundScore.textContent = 'Good Luck!';
+            accumScore.textContent = `SCORE: Player ${playerScore} : ${computerScore} Computer`;
+        }
+
+        function animation(e) {
+            e.target.classList.add('click');
+        }
+
+        function removeAnimation(e) {
+            if (e.propertyName !== 'transform') return;
+            e.target.classList.remove('click');
+        }
+        
+        weapons.forEach((weapon) => weapon.addEventListener('click', playRound));
+        weapons.forEach((weapon) => weapon.addEventListener('click', animation));
+        weapons.forEach(weapon => weapon.addEventListener('transitionend', removeAnimation));
 
         function endGame() {
             if (playerScore > computerScore) {
-                console.log('Congratulations! You win the game!');
+                finalScore.textContent = 'Congratulations! You win the game!';
             } else if (playerScore < computerScore) {
-                console.log('You lose the game :( Try again!');
+                finalScore.textContent = 'You lose the game :( Try again!';
             } else {
-                console.log('It\'s a tie! Try again!');
+                finalScore.textContent = 'It\'s a tie! Try again!';
             }
             playerScore = 0;
             computerScore = 0;     
         }
+
+        startBtn.addEventListener('click', startGame);
     </script>
 </body>
