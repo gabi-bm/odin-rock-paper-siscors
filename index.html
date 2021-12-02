@@ -86,6 +86,9 @@
                 roundScore.textContent = 'Tie!';
             }
             accumScore.textContent = `SCORE: Player ${playerScore} : ${computerScore} Computer`;
+            if (playerScore >= 5 || computerScore >=5) {
+                endGame();
+            }
         }
 
         function startGame() { 
@@ -116,8 +119,19 @@
             } else {
                 finalScore.textContent = 'It\'s a tie! Try again!';
             }
+            weapons.forEach((weapon) => weapon.disabled = true);
+            startBtn.textContent = 'Restart Game';
+            startBtn.disabled = false;
+            startBtn.addEventListener('click', restartGame);
+        }
+
+        function restartGame () {
             playerScore = 0;
-            computerScore = 0;     
+            computerScore = 0;  
+            roundScore.textContent = 'Good Luck!';
+            accumScore.textContent = `SCORE: Player ${playerScore} : ${computerScore} Computer`;
+            finalScore.textContent = '';
+            weapons.forEach((weapon) => weapon.disabled = false);
         }
 
         startBtn.addEventListener('click', startGame);
